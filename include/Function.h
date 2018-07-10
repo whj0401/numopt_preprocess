@@ -12,6 +12,7 @@
 #include "Variable.h"
 #include "Path.h"
 #include "CodeCreater.h"
+#include "Code_Tree_Node.h"
 
 namespace le
 {
@@ -59,7 +60,8 @@ namespace le
         SgFunctionDeclaration *decl;
         VariableTable var_tbl;
         VariableTable input_parameters;
-        Paths paths;
+        Paths *paths;
+        shared_ptr<Code_Tree_Node> root;
         
         Function(const string &_func_name, SgFunctionDeclaration *_decl, CodeCreater *_pool = &paths_pool);
 

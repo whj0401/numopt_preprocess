@@ -14,11 +14,13 @@ namespace le
     
     void Path::add_stmt(const SgStatement *stmt)
     {
+        if (!can_add_stmt()) return;
         s.push_back(stmt->unparseToString());
     }
     
     void Path::add_str(const string &str)
     {
+        if (!can_add_stmt()) return;
         s.push_back(str);
     }
     
@@ -60,10 +62,64 @@ namespace le
         }
     }
     
+    void Path_Loop_Paths::add_stmt(const SgStatement *stmt)
+    {
+        if (!has_follow_paths())
+        {
+            path.add_stmt(stmt);
+        }
+        else
+        {
+            follow_paths->add_stmt(stmt);
+        }
+    }
+    
+    void Path_Loop_Paths::add_str(const string &str)
+    {
+        if (!has_follow_paths())
+        {
+            path.add_str(str);
+        }
+        else
+        {
+            follow_paths->add_str(str);
+        }
+    }
+    
+    void Path_Loop_Paths::enter_new_block()
+    {
+        if (!has_follow_paths())
+        {
+            path.enter_new_block();
+        }
+        else
+        {
+            follow_paths->enter_new_block();
+        }
+    }
+    
+    void Path_Loop_Paths::leave_cur_block()
+    {
+        if (!has_follow_paths())
+        {
+            path.leave_cur_block();
+        }
+        else
+        {
+            follow_paths->leave_cur_block();
+        }
+    }
+    
     Path::Path() : is_return(false), ret_expr(nullptr), block_layer(0)
     {}
     
     void Paths::add_path(const le::Path &p)
+    {
+        Path_Loop_Paths tmp(p);
+        list.push_back(p);
+    }
+    
+    void Paths::add_path_loop_paths(const le::Path_Loop_Paths &p)
     {
         list.push_back(p);
     }
@@ -72,7 +128,6 @@ namespace le
     {
         for (auto &p : list)
         {
-            if (p.is_return) continue;
             p.add_stmt(stmt);
         }
     }
@@ -81,7 +136,6 @@ namespace le
     {
         for (auto &p : list)
         {
-            if (p.is_return) continue;
             p.add_str(str);
         }
     }
@@ -92,8 +146,8 @@ namespace le
         copy.list.clear();
         for (const auto &p : list)
         {
-            if (p.is_return) continue;
-            copy.add_path(p);
+            if (p.path.is_return) continue;
+            
         }
         return copy;
     }
@@ -102,7 +156,7 @@ namespace le
     {
         for (const auto &tmp : p.list)
         {
-            add_path(tmp);
+            add_path_loop_paths(tmp);
         }
     }
     
@@ -110,7 +164,7 @@ namespace le
     {
         for (auto &p : list)
         {
-            p.is_return = true;
+            p.path.is_return = true;
         }
     }
     
@@ -136,7 +190,7 @@ namespace le
         stringstream ss;
         for (const auto &p : list)
         {
-            p.write_to_ss(ss);
+            p.path.write_to_ss(ss);
             ss << endl;
         }
         return ss.str();

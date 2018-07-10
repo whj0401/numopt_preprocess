@@ -80,16 +80,16 @@ namespace le
                 program_list.push_back(program);
             }
         }
-
-//        for (auto &p : program_list)
-//        {
-//            cout << p.to_string();
-//        }
-//
+    
         for (auto &p : program_list)
         {
-            cout << p.to_codes_block();
+            cout << p.to_string();
         }
+//
+//        for (auto &p : program_list)
+//        {
+//            cout << p.to_codes_block();
+//        }
 
 //        for (auto &p : program_list)
 //        {

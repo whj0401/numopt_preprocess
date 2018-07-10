@@ -39,6 +39,10 @@ iRRAM::REAL test2(iRRAM::REAL a, iRRAM::REAL b)
         return c2;
     }
     iRRAM::REAL c4 = f(c2);
+//    while(c3 < c4)
+//    {
+//        c3 = c3 + c4 / 2;
+//    }
     if (c3 > c2)
     {
         c4 = c3 + c4;
@@ -46,6 +50,10 @@ iRRAM::REAL test2(iRRAM::REAL a, iRRAM::REAL b)
     else if (c3 < c2)
     {
         c4 = c2 - c3;
+    }
+    else
+    {
+        c4 = c4 * 2;
     }
     return c4;
 };

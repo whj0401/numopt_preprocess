@@ -32,13 +32,13 @@ namespace le
     Function Function::copy_with_no_end_path()
     {
         Function new_func = *this;
-        new_func.paths = this->paths.copy_no_end();
+        new_func.paths = _in_pool->copy_paths_with_no_return_path(this->paths);
         return new_func;
     }
     
     void Function::merge(const le::Function &f)
     {
-        paths.merge(f.paths);
+        paths->merge(*f.paths);
     }
     
     void Function::handle_statement(SgStatement *stmt)
@@ -91,27 +91,27 @@ namespace le
     void Function::handle_block_statement(SgBasicBlock *block)
     {
         SgStatementPtrList &stmt_list = block->get_statements();
-        paths.enter_new_block();
+        paths->enter_new_block();
         for (auto s : stmt_list)
         {
             handle_statement(s);
         }
-        paths.leave_cur_block();
+        paths->leave_cur_block();
     }
     
     void Function::handle_for_statement(SgForStatement *for_stmt)
     {
-        paths.add_str(for_stmt->unparseToString());
+        paths->add_str(for_stmt->unparseToString());
     }
     
     void Function::handle_while_statement(SgWhileStmt *while_stmt)
     {
-        paths.add_str(while_stmt->unparseToString());
+        paths->add_str(while_stmt->unparseToString());
     }
     
     void Function::handle_dowhile_statement(SgDoWhileStmt *dowhile_stmt)
     {
-        paths.add_str(dowhile_stmt->unparseToString());
+        paths->add_str(dowhile_stmt->unparseToString());
     }
     
     void Function::handle_if_statement(SgIfStmt *if_stmt)
@@ -125,20 +125,36 @@ namespace le
             
             auto true_body = dynamic_cast<SgBasicBlock *>(if_stmt->get_true_body());
             auto false_body = dynamic_cast<SgBasicBlock *>(if_stmt->get_false_body());
+            auto else_if_body = dynamic_cast<SgIfStmt *>(if_stmt->get_false_body());
+    
+            string true_stmt = string("if(") + condition->unparseToString() + ")";
+            string false_stmt = string("if(!(") + condition->unparseToString() + "))";
+    
             if (!is_empty_block(true_body))
             {
-                string true_stmt = string("if(") + condition->unparseToString() + ")";
-                this->paths.add_str(true_stmt);
+                this->paths->add_str(true_stmt);
                 this->handle_block_statement(true_body);
             }
-            
-            if (!is_empty_block(false_body))
+    
+            // else if stmt
+            new_func.paths->add_str(true_stmt);
+            new_func.paths->enter_new_block();
+            new_func.paths->leave_cur_block();
+            new_func.paths->add_str("else");
+            new_func.paths->enter_new_block();
+            if (else_if_body != nullptr)
+            {
+                new_func.paths->enter_new_block();
+                new_func.handle_if_statement(else_if_body);
+                new_func.paths->leave_cur_block();
+            }
+            else if (!is_empty_block(false_body))
             {
                 string false_stmt = string("if(!(") + condition->unparseToString() + "))";
-                new_func.paths.add_str(false_stmt);
+                new_func.paths->add_str(false_stmt);
                 new_func.handle_block_statement(false_body);
             }
-            
+            new_func.paths->leave_cur_block();
             merge(new_func);
         }
     }
@@ -150,7 +166,7 @@ namespace le
     
     void Function::handle_var_declaration(SgVariableDeclaration *decl)
     {
-        paths.add_stmt(decl);
+        paths->add_stmt(decl);
 //        SgInitializedNamePtrList &list = decl->get_variables();
 //        for (SgInitializedName *n : list)
 //        {
@@ -241,15 +257,15 @@ namespace le
 //        print_whole_node(expr_s);
         SgExpression *expr = expr_s->get_expression();
         handle_expression(expr);
-        paths.add_stmt(expr_s);
+        paths->add_stmt(expr_s);
     }
     
     void Function::handle_return_statement(SgReturnStmt *return_stmt)
     {
         SgExpression *expr = return_stmt->get_expression();
-        paths.add_stmt(return_stmt);
+        paths->add_stmt(return_stmt);
         // must place after the add_stmt function
-        paths.set_return();
+        paths->set_return();
     }
     
     Function::Function(const std::string &_func_name, SgFunctionDeclaration *_decl, CodeCreater *_pool) :
@@ -260,7 +276,7 @@ namespace le
             return;
         }
         add_input_parameterlist();
-        
+        paths = _in_pool->create_paths();
         SgFunctionDefinition *func_def = decl->get_definition();
         if (func_def == nullptr)
         {
@@ -268,21 +284,25 @@ namespace le
             return;
         }
         SgBasicBlock *func_body = func_def->get_body();
-        handle_block_statement(func_body);
+//        handle_block_statement(func_body);
+        root = make_shared<Code_Tree_Node>();
+        root->handle_block_statement(func_body);
     }
     
     string Function::to_string() const
     {
         stringstream ss;
-        ss << "\"function_name\": " << "\"" << func_name << "\"" << endl;
-        ss << "\"variables\": " << var_tbl.to_string() << endl;
-        ss << "\"input_variables\": " << input_parameters.to_string() << endl;
-        ss << "\"paths\": [" << endl;
-//        for (const auto &p : path_list)
-//        {
-//            ss << p.to_string(1);
-//        }
-        ss << "]" << endl;
+//        ss << "\"function_name\": " << "\"" << func_name << "\"" << endl;
+//        ss << "\"variables\": " << var_tbl.to_string() << endl;
+//        ss << "\"input_variables\": " << input_parameters.to_string() << endl;
+//        ss << "\"paths\": [" << endl;
+////        for (const auto &p : path_list)
+////        {
+////            ss << p.to_string(1);
+////        }
+//        ss << "]" << endl;
+//        return ss.str();
+        root->write_code_to_ss(ss, 0);
         return ss.str();
     }
     
@@ -299,7 +319,7 @@ namespace le
 //        }
 //        ss << "]" << endl;
 //        return ss.str();
-        return paths.to_string();
+        return paths->to_string();
     }
     
     void Function::to_klee_code_functions()

@@ -22,8 +22,7 @@ namespace le
     void print_whole_node(SgNode * s, stringstream & ss, unsigned int
     tab_num)
 {
-    if(s == nullptr)
-    return;
+    if(s == nullptr) return;
     auto list = s->get_traversalSuccessorContainer();
     ss <<
     generate_tab(tab_num);
