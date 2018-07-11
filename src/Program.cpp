@@ -68,6 +68,10 @@ namespace le
     
     void run_project(int argc, char **argv)
     {
+        init_operator_str_map();
+        init_member_set();
+        init_relative_set();
+        
         project = frontend(argc, argv);
         vector<SgNode *> nodes = project->get_fileList_ptr()->get_traversalSuccessorContainer();
         for (auto n : nodes)

@@ -11,6 +11,7 @@
 #include <set>
 #include "rose.h"
 #include "Function.h"
+#include "common.h"
 
 namespace le
 {

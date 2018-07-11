@@ -23,6 +23,26 @@ namespace le
         }
     }
     
+    string Variable::to_klee_make_symbolic() const
+    {
+        string res = string("klee_make_symbolic(&") + var_name + ", sizeof(" + var_name + "), \"" + var_name + "\");";
+        return res;
+    }
+    
+    string Variable::to_klee_out_string() const
+    {
+        string res = string("klee_output(\"") + var_name + "\", ";
+        if (type_T == T_REAL)
+        {
+            res += var_name + ".value);";
+        }
+        else
+        {
+            res += var_name + ");";
+        }
+        return res;
+    }
+    
     string VariableTable::to_string() const
     {
         stringstream ss;
@@ -96,6 +116,14 @@ namespace le
         }
         ss << ")";
         return ss.str();
+    }
+    
+    VariableTable VariableTable::operator+(const le::VariableTable &t) const
+    {
+        VariableTable res;
+        res.T = T;
+        res.T.insert(t.T.begin(), t.T.end());
+        return res;
     }
 }
 

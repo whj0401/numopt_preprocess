@@ -44,6 +44,10 @@ namespace le
         {
             return type_node->unparseToString() + " " + var_name + ";";
         }
+    
+        string to_klee_make_symbolic() const;
+    
+        string to_klee_out_string() const;
     };
     
     class VariableTable
@@ -79,6 +83,8 @@ namespace le
         string to_declaration_code(unsigned int tab_num = 0) const;
         
         string to_variables_reference_list() const;
+    
+        VariableTable operator+(const VariableTable &t) const;
     };
     
 }

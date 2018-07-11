@@ -50,6 +50,42 @@ namespace le
     expression_to_string_with_value_map(const SgExpression *expr, const std::map<std::string, std::string> &val_map);
     
     bool is_empty_block(SgBasicBlock *block);
+    
+    extern std::map<std::string, int> real_member_func_set;
+    extern std::map<std::string, int> real_relative_func_set;
+    
+    void init_member_set();
+    
+    void init_relative_set();
+    
+    inline bool find_in_member_func_set(const std::string &func_decl)
+    {
+        return (real_member_func_set.find(func_decl) != real_member_func_set.end());
+    }
+    
+    inline bool find_in_relative_func_set(const std::string &func_decl)
+    {
+        return (real_relative_func_set.find(func_decl) != real_relative_func_set.end());
+    }
+    
+    SgDotExp *get_member_func_dotExp(SgFunctionCallExp *func_call);
+    
+    SgExpression *get_member_func_caller(SgFunctionCallExp *func_call);
+    
+    SgMemberFunctionRefExp *get_member_func_refExp(SgFunctionCallExp *func_call);
+    
+    SgFunctionRefExp *get_relative_func_refExp(SgFunctionCallExp *func_call);
+    
+    inline SgExpressionPtrList get_func_parameters(SgFunctionCallExp *func_call)
+    {
+        return func_call->get_args()->get_expressions();
+    }
+    
+    bool is_compound_assign_option(SgExpression *expr);
+    
+    std::string get_compound_assign_option_str(SgExpression *expr);
+    
+    SgBinaryOp *create_relative_binaryOp(SgExpression *expr);
 }
 
 #endif //CODE_ANALYSE_COMMON_H
