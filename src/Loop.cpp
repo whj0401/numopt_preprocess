@@ -3,6 +3,7 @@
 //
 
 #include <set>
+#include <fstream>
 #include "Loop.h"
 #include "debug.h"
 #include "common.h"
@@ -51,6 +52,54 @@ namespace le
         root->handle_statement(body_stmt);
     }
     
+    string Loop::get_loop_func_name() const
+    {
+        stringstream ss;
+        ss << "loop" << ID;
+        return ss.str();
+    }
+    
+    void Loop::write_loop_correspond_main_func(stringstream &ss) const
+    {
+        string tab = generate_tab(1);
+        ss << "int main()" << endl;
+        ss << "{" << endl;
+        ss << out_loop_vars.to_declaration_code(1);
+        ss << tab << "loop" << ID << out_loop_vars.to_variables_reference_list() << ";" << endl;
+        ss << tab << "return 0;" << endl;
+        ss << "}" << endl;
+    }
+    
+    void Loop::to_klee_code_functions() const
+    {
+        stringstream ss;
+        ofstream out(klee_output_dir + get_loop_func_name() + source_code_file_postfix);
+        ss << klee_code_file_includes << endl;
+        ss << "void " << get_loop_func_name() << out_loop_vars.to_parameterlist() << endl;
+        root->write_code_to_ss(ss, 0);
+        this->write_loop_correspond_main_func(ss);
+        out << ss.str();
+        out.close();
+        
+        set<shared_ptr<Code_Tree_Node>> nodes;
+        set<shared_ptr<Loop>> loops;
+        root->get_all_nodes_need_to_be_printed(nodes, loops);
+        for (auto &n : nodes)
+        {
+            ofstream node_out(klee_output_dir + n->get_node_func_name() + source_code_file_postfix);
+            ss.clear();
+            ss << klee_code_file_includes << endl;
+            n->write_node_function_to_ss(ss);
+            n->write_node_correspond_main_func(ss);
+            node_out << ss.str();
+            node_out.close();
+        }
+        for (auto &l : loops)
+        {
+            l->to_klee_code_functions();
+        }
+    }
+    
     string Loop::to_string() const
     {
         stringstream ss;
@@ -62,9 +111,7 @@ namespace le
         root->get_all_nodes_need_to_be_printed(nodes, loops);
         for (auto &n : nodes)
         {
-            ss << "void node" << n->ID << n->input_vars.to_parameterlist() << endl;
-            n->write_code_to_ss(ss, 0);
-            ss << endl;
+            n->write_node_function_to_ss(ss);
         }
         for (auto &l : loops)
         {

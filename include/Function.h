@@ -26,6 +26,8 @@ namespace le
         
         void add_input_parameterlist();
     
+        void write_function_correspond_main_func(stringstream &ss) const;
+    
     public:
         string func_name;
         SgFunctionDeclaration *decl;

@@ -24,6 +24,8 @@ namespace le
     
     class Loop : public enable_shared_from_this<Loop>
     {
+        void write_loop_correspond_main_func(stringstream &ss) const;
+        
     public:
         size_t ID;
         VariableTable out_loop_vars;
@@ -37,6 +39,10 @@ namespace le
         void init_for_statement(SgForStatement *for_stmt);
         
         void init_while_statement(SgWhileStmt *while_stmt);
+    
+        string get_loop_func_name() const;
+    
+        void to_klee_code_functions() const;
         
         string to_string() const;
     };

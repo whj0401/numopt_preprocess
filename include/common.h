@@ -14,6 +14,10 @@ namespace le
 {
     extern const std::string TAB;
     
+    extern const std::string klee_code_file_includes;
+    extern const std::string klee_output_dir;
+    extern const std::string source_code_file_postfix;
+    
     extern std::map<VariantT, std::string> operator_str_map;
     
     void init_operator_str_map();
@@ -22,6 +26,13 @@ namespace le
     {
         std::stringstream ss;
         for (int i = 0; i < tab_num; ++i) ss << TAB;
+        return ss.str();
+    }
+    
+    inline std::string int_to_str(const int a)
+    {
+        std::stringstream ss;
+        ss << a;
         return ss.str();
     }
     
@@ -42,6 +53,13 @@ namespace le
                dynamic_cast<const SgDoWhileStmt *>(stmt) ||
                dynamic_cast<const SgIfStmt *>(stmt) ||
                dynamic_cast<const SgSwitchStatement *>(stmt);
+    }
+    
+    inline std::string generate_klee_output_stmt(const std::string &name, const std::string &value)
+    {
+        std::stringstream ss;
+        ss << "klee_output(\"" << name << "\", " << value << ");";
+        return ss.str();
     }
     
     bool write_stream_to_file(std::string out_file, std::stringstream &ss);

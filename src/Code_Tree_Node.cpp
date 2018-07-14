@@ -189,7 +189,10 @@ namespace le
         }
         else
         {
-            add_str("break;");
+            add_str("// break;");
+            add_str("int __break__ = 0;");
+            add_str(generate_klee_output_stmt("__break__", "__break__"));
+            add_str("return;");
             has_broken = true;
         }
     }
@@ -208,7 +211,10 @@ namespace le
         }
         else
         {
-            add_str("continue;");
+            add_str("// continue;");
+            add_str("int __continue__ = 0;");
+            add_str(generate_klee_output_stmt("__continue__", "__continue__"));
+            add_str("return;");
             has_continued = true;
         }
     }
@@ -224,6 +230,7 @@ namespace le
     
     void Code_Tree_Node::handle_statement(SgStatement *stmt)
     {
+        cout << stmt->unparseToString() << ", " << stmt->class_name() << endl;
         if (auto s = dynamic_cast<SgBasicBlock *>(stmt))
         {
             handle_block_statement(s);
@@ -248,6 +255,14 @@ namespace le
         {
             handle_return_statement(s);
         }
+        else if (auto s = dynamic_cast<SgBreakStmt *>(stmt))
+        {
+            handle_break_statement(s);
+        }
+        else if (auto s = dynamic_cast<SgContinueStmt *>(stmt))
+        {
+            handle_continue_statement(s);
+        }
         else
         {
             add_stmt(stmt);
@@ -265,8 +280,28 @@ namespace le
     
     void Code_Tree_Node::handle_return_statement(SgReturnStmt *return_stmt)
     {
-        add_stmt(return_stmt);
+        SgExpression *expr = return_stmt->get_expression();
+        if (expr != nullptr)
+        {
+            // declare __return__ as the expression of return statement
+            string declare_return_value = "class iRRAM::REAL __return__ = ";
+            declare_return_value += expr->unparseToString() + ";";
+            add_str(declare_return_value);
+            // then set __return__ as klee_output
+            add_str("klee_output(\"__return__\", __return__.value);");
+        }
+        add_str("return;");
         set_returned();
+    }
+    
+    void Code_Tree_Node::handle_break_statement(SgBreakStmt *break_stmt)
+    {
+        set_broke();
+    }
+    
+    void Code_Tree_Node::handle_continue_statement(SgContinueStmt *continue_stmt)
+    {
+        set_continued();
     }
     
     void Code_Tree_Node::handle_if_statement(SgIfStmt *if_stmt)
@@ -480,14 +515,43 @@ namespace le
         }
         if (next_tree_root != nullptr)
         {
-            ss << tab2 << "loop" << loop->ID << " = 0;" << endl;
-            ss << tab2 << "next_node" << next_tree_root->ID << " = 0;" << endl;
+            string loop_name = loop->get_loop_func_name();
+            ss << tab2 << "int " << loop_name << " = 0;" << endl;
+            ss << tab2 << generate_klee_output_stmt(loop_name, loop_name) << endl;
+            string node_name = next_tree_root->get_node_func_name();
+            ss << tab2 << "int " << node_name << " = 0;" << endl;
+            ss << tab2 << generate_klee_output_stmt(node_name, node_name) << endl;
         }
         ss << tab1 << leave_block << endl;
     }
     
+    void Code_Tree_Node::write_node_function_to_ss(stringstream &ss) const
+    {
+        ss << "void " << get_node_func_name() << input_vars.to_parameterlist() << endl;
+        write_code_to_ss(ss, 0);
+        ss << endl;
+    }
+    
+    void Code_Tree_Node::write_node_correspond_main_func(stringstream &ss) const
+    {
+        string tab = generate_tab(1);
+        ss << "int main()" << endl;
+        ss << "{" << endl;
+        ss << input_vars.to_declaration_code(1);
+        ss << tab << get_node_func_name() << input_vars.to_variables_reference_list() << ";" << endl;
+        ss << tab << "return 0;" << endl;
+        ss << "}" << endl;
+    }
+    
+    string Code_Tree_Node::get_node_func_name() const
+    {
+        stringstream ss;
+        ss << "node" << ID;
+        return ss.str();
+    }
+    
     void Code_Tree_Node::get_all_nodes_need_to_be_printed(set<shared_ptr<Code_Tree_Node>> &nodes,
-                                                          set<shared_ptr<Loop>> &loops)
+                                                          set<shared_ptr<Loop>> &loops) const
     {
         if (this->is_leaf_node()) return;
         if (this->next_tree_root != nullptr)

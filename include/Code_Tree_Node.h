@@ -73,6 +73,10 @@ namespace le
         
         void handle_return_statement(SgReturnStmt *return_stmt);
     
+        void handle_break_statement(SgBreakStmt *break_stmt);
+    
+        void handle_continue_statement(SgContinueStmt *continue_stmt);
+    
         void handle_for_statement(SgForStatement *for_stmt);
     
         void handle_while_statement(SgWhileStmt *while_stmt);
@@ -83,7 +87,14 @@ namespace le
         
         void write_code_to_ss(stringstream &ss, unsigned int tab_num) const;
     
-        void get_all_nodes_need_to_be_printed(set<shared_ptr<Code_Tree_Node>> &nodes, set<shared_ptr<Loop>> &loops);
+        void write_node_function_to_ss(stringstream &ss) const;
+    
+        void write_node_correspond_main_func(stringstream &ss) const;
+    
+        string get_node_func_name() const;
+    
+        void
+        get_all_nodes_need_to_be_printed(set<shared_ptr<Code_Tree_Node>> &nodes, set<shared_ptr<Loop>> &loops) const;
         
         bool can_add_stmt() const
         { return !has_returned && !has_broken && !has_continued; }

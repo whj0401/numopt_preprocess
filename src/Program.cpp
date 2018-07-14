@@ -94,10 +94,10 @@ namespace le
 //        {
 //            cout << p.to_codes_block();
 //        }
-
-//        for (auto &p : program_list)
-//        {
-//            p.to_klee_code_functions();
-//        }
+    
+        for (auto &p : program_list)
+        {
+            p.to_klee_code_functions();
+        }
     }
 }

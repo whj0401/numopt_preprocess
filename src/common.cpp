@@ -9,6 +9,14 @@ namespace le
 {
     const std::string TAB = "    ";
     
+    const std::string klee_code_file_includes = "#include \"include/REAL.h\"\n"
+                                                "#include \"klee.h\"\n"
+                                                "#include \"include/klee_expression.h\"\n"
+                                                "using namespace iRRAM;\n\n";
+    
+    const std::string klee_output_dir = "/home/whj/numopt_preprocess/klee_output/";
+    const std::string source_code_file_postfix = ".cpp";
+    
     std::map<VariantT, std::string> operator_str_map;
     
     void init_operator_str_map()

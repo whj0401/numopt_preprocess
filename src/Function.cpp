@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <fstream>
 #include "Function.h"
 #include "debug.h"
 
@@ -59,9 +60,7 @@ namespace le
         root->get_all_nodes_need_to_be_printed(nodes, loops);
         for (auto &n : nodes)
         {
-            ss << "void node" << n->ID << n->input_vars.to_parameterlist() << endl;
-            n->write_code_to_ss(ss, 0);
-            ss << endl;
+            n->write_node_function_to_ss(ss);
         }
         for (auto &l : loops)
         {
@@ -72,26 +71,48 @@ namespace le
     
     string Function::to_code() const
     {
-//        stringstream ss;
-//        ss << "\"function_name\": " << "\"" << func_name << "\"" << endl;
-//        ss << "\"variables\": " << var_tbl.to_string() << endl;
-//        ss << "\"input_variables\": " << input_parameters.to_string() << endl;
-//        ss << "\"paths\": [" << endl;
-//        for (const auto &p : path_list)
-//        {
-//            ss << p.to_code(1);
-//        }
-//        ss << "]" << endl;
-//        return ss.str();
         return "";
+    }
+    
+    void Function::write_function_correspond_main_func(stringstream &ss) const
+    {
+        string tab = generate_tab(1);
+        ss << "int main()" << endl;
+        ss << "{" << endl;
+        ss << input_parameters.to_declaration_code(1);
+        ss << tab << func_name << input_parameters.to_variables_reference_list() << ";" << endl;
+        ss << tab << "return 0;" << endl;
+        ss << "}" << endl;
     }
     
     void Function::to_klee_code_functions()
     {
-//        for (auto &p : path_list)
-//        {
-//            p.to_klee_code_functions(input_parameters);
-//        }
+        stringstream ss;
+        ofstream out(klee_output_dir + func_name + source_code_file_postfix);
+        ss << klee_code_file_includes << endl;
+        ss << "void " << func_name << input_parameters.to_parameterlist() << endl;
+        root->write_code_to_ss(ss, 0);
+        this->write_function_correspond_main_func(ss);
+        out << ss.str();
+        out.close();
+    
+        set<shared_ptr<Code_Tree_Node>> nodes;
+        set<shared_ptr<Loop>> loops;
+        root->get_all_nodes_need_to_be_printed(nodes, loops);
+        for (auto &n : nodes)
+        {
+            ofstream node_out(klee_output_dir + n->get_node_func_name() + source_code_file_postfix);
+            stringstream node_ss;
+            node_ss << klee_code_file_includes << endl;
+            n->write_node_function_to_ss(node_ss);
+            n->write_node_correspond_main_func(node_ss);
+            node_out << node_ss.str();
+            node_out.close();
+        }
+        for (auto &l : loops)
+        {
+            l->to_klee_code_functions();
+        }
     }
     
 }
