@@ -23,6 +23,11 @@ namespace le
         return (if_node == nullptr && else_node == nullptr && next_tree_root == nullptr);
     }
     
+    bool Code_Tree_Node::need_to_print_klee_out() const
+    {
+        return (if_node == nullptr && else_node == nullptr);
+    }
+    
     vector<shared_ptr<Code_Tree_Node>> Code_Tree_Node::get_all_leaves_ptr()
     {
         vector<shared_ptr<Code_Tree_Node>> ret;
@@ -91,12 +96,20 @@ namespace le
     
     void Code_Tree_Node::initial_if_else_branch(SgExpression *condition)
     {
-        assert(next_tree_root == nullptr);
+        assert(next_tree_root == nullptr && loop == nullptr);
         this->condition = condition;
+        // input variables table and left value table are inherited from father
         if_node = make_shared<Code_Tree_Node>();
         if_node->input_vars = input_vars + declared_vars;
+        if_node->lvars = this->lvars;
         else_node = make_shared<Code_Tree_Node>();
         else_node->input_vars = input_vars + declared_vars;
+        else_node->lvars = this->lvars;
+    }
+    
+    bool Code_Tree_Node::has_if_else_branches() const
+    {
+        return (condition != nullptr && if_node != nullptr && else_node != nullptr);
     }
     
     void Code_Tree_Node::initial_make_symbolics(const VariableTable &input)
@@ -106,6 +119,11 @@ namespace le
         {
             add_str(v.second.to_klee_make_symbolic());
         }
+    }
+    
+    bool Code_Tree_Node::end_with_loop() const
+    {
+        return (loop != nullptr && next_tree_root != nullptr);
     }
     
     Code_Tree_Node::Code_Tree_Node() :
@@ -171,6 +189,7 @@ namespace le
         }
         else
         {
+//            add_str("return;");
             has_returned = true;
         }
     }
@@ -192,7 +211,7 @@ namespace le
             add_str("// break;");
             add_str("int __break__ = 0;");
             add_str(generate_klee_output_stmt("__break__", "__break__"));
-            add_str("return;");
+//            add_str("return;");
             has_broken = true;
         }
     }
@@ -214,7 +233,7 @@ namespace le
             add_str("// continue;");
             add_str("int __continue__ = 0;");
             add_str(generate_klee_output_stmt("__continue__", "__continue__"));
-            add_str("return;");
+//            add_str("return;");
             has_continued = true;
         }
     }
@@ -290,7 +309,6 @@ namespace le
             // then set __return__ as klee_output
             add_str("klee_output(\"__return__\", __return__.value);");
         }
-        add_str("return;");
         set_returned();
     }
     
@@ -339,6 +357,15 @@ namespace le
         }
     }
     
+    void Code_Tree_Node::initial_next_root_node(shared_ptr<Loop> _l)
+    {
+        assert(condition == nullptr && if_node == nullptr && else_node == nullptr);
+        this->loop = _l;
+        this->next_tree_root = make_shared<Code_Tree_Node>();
+        this->next_tree_root->initial_make_symbolics(input_vars + declared_vars);
+        // left value table is a new empty table
+    }
+    
     void Code_Tree_Node::handle_for_statement(SgForStatement *for_stmt)
     {
         // TODO
@@ -352,21 +379,25 @@ namespace le
         tmp_loop->init_while_statement(while_stmt);
         for (auto &ptr : leaf_nodes)
         {
-            ptr->loop = tmp_loop;
-            ptr->next_tree_root = make_shared<Code_Tree_Node>();
-            ptr->next_tree_root->initial_make_symbolics(tmp_loop->out_loop_vars);
+            ptr->initial_next_root_node(tmp_loop);
         }
     }
     
     void Code_Tree_Node::add_left_value(const le::Variable &var)
     {
         if (lvars.has_variable(var.var_name)) return;
-        this->lvars.add_variable(var);
-        this->add_str(var.to_klee_out_string());
+        auto no_ends = get_all_no_end_leaves_ptr();
+        for (auto &ptr : no_ends)
+        {
+            ptr->lvars.add_variable(var);
+        }
+        lvars.add_variable(var);
+//        this->add_str(var.to_klee_out_string());
     }
     
     void Code_Tree_Node::add_left_value(const string &var_name)
     {
+        if (!can_add_stmt()) return;
         if (this->input_vars.has_variable(var_name))
         {
             this->add_left_value(input_vars.find(var_name));
@@ -385,7 +416,19 @@ namespace le
         assert(!input_vars.has_variable(var.var_name));
         assert(!lvars.has_variable(var.var_name));
         assert(!declared_vars.has_variable(var.var_name));
+        // use declared_vars as the record of the usable variables table
+        // we just create a loop for all branches, rather than create a loop for every branch that can execute the loop
+        // if a node can execute the loop, we assign the loop_ptr to the node's loop_ptr
         this->declared_vars.add_variable(var);
+        if (has_if_else_branches())
+        {
+            if_node->add_declaretion(var);
+            else_node->add_declaretion(var);
+        }
+        else if (end_with_loop())
+        {
+            next_tree_root->add_declaretion(var);
+        }
     }
     
     void Code_Tree_Node::handle_var_declaration(SgVariableDeclaration *decl)
@@ -506,6 +549,10 @@ namespace le
         {
             ss << tab2 << stmt << endl;
         }
+        if (need_to_print_klee_out())
+        {
+            ss << lvars.to_make_real_klee_output_code(tab_num + 1);
+        }
         if (condition != nullptr)
         {
             ss << tab2 << "if(" << condition->unparseToString() << ")" << endl;
@@ -521,6 +568,10 @@ namespace le
             string node_name = next_tree_root->get_node_func_name();
             ss << tab2 << "int " << node_name << " = 0;" << endl;
             ss << tab2 << generate_klee_output_stmt(node_name, node_name) << endl;
+        }
+        if (!can_add_stmt())
+        {
+            ss << tab2 << "return;" << endl;
         }
         ss << tab1 << leave_block << endl;
     }

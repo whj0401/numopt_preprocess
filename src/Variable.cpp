@@ -90,6 +90,18 @@ namespace le
         return ss.str();
     }
     
+    string VariableTable::to_make_real_klee_output_code(unsigned int tab_num) const
+    {
+        stringstream ss;
+        string tab = generate_tab(tab_num);
+        for (const auto &v : T)
+        {
+            const string &name = v.second.var_name;
+            ss << tab << v.second.to_klee_out_string() << endl;
+        }
+        return ss.str();
+    }
+    
     string VariableTable::to_declaration_code(unsigned int tab_num) const
     {
         stringstream ss;

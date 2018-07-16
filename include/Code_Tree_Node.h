@@ -28,6 +28,8 @@ namespace le
         
         bool is_leaf_node() const;
     
+        bool need_to_print_klee_out() const;
+    
         void add_left_value(const Variable &var);
     
         void add_left_value(const string &var_name);
@@ -52,6 +54,12 @@ namespace le
         Code_Tree_Node();
     
         void initial_if_else_branch(SgExpression *condition);
+    
+        bool has_if_else_branches() const;
+    
+        void initial_next_root_node(shared_ptr<Loop> _l);
+    
+        bool end_with_loop() const;
     
         void initial_make_symbolics(const VariableTable &input);
         

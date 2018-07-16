@@ -1,10 +1,10 @@
 #include "iRRAM.h"
 #include <iostream>
 
-iRRAM::REAL f(iRRAM::REAL x)
-{
-    return 2 * x;
-}
+//iRRAM::REAL f(iRRAM::REAL x)
+//{
+//    return 2 * x;
+//}
 
 //iRRAM::REAL test1(iRRAM::REAL a, int b)
 //{
@@ -38,7 +38,7 @@ iRRAM::REAL test2(iRRAM::REAL a, iRRAM::REAL b)
     {
         return c2;
     }
-    iRRAM::REAL c4 = f(c2);
+    iRRAM::REAL c4 = sin(c2);
     while (c3 < c4)
     {
         c3 = c3 + c4 / 2;
