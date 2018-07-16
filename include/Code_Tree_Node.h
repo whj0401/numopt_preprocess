@@ -106,6 +106,8 @@ namespace le
         
         bool can_add_stmt() const
         { return !has_returned && !has_broken && !has_continued; }
+    
+        VariableTable get_all_declared_variables() const;
         
         ~Code_Tree_Node();
     };

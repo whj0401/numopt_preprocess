@@ -618,6 +618,21 @@ namespace le
         }
     }
     
+    VariableTable Code_Tree_Node::get_all_declared_variables() const
+    {
+        VariableTable ret = declared_vars;
+        if (has_if_else_branches())
+        {
+            ret = ret + if_node->get_all_declared_variables();
+            ret = ret + else_node->get_all_declared_variables();
+        }
+        else if (end_with_loop())
+        {
+            ret = ret + next_tree_root->get_all_declared_variables();
+        }
+        return ret;
+    }
+    
     Code_Tree_Node::~Code_Tree_Node()
     {
     

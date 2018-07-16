@@ -25,7 +25,7 @@ namespace le
             }
             if (auto *funcDecl = dynamic_cast<SgFunctionDeclaration *>(decl))
             {
-                Function f(funcDecl->get_name().getString(), funcDecl);
+                Function f(funcDecl->get_name().getString(), funcDecl, name);
                 add_function(f);
             }
         }
@@ -63,6 +63,7 @@ namespace le
         for (auto &f : func_list)
         {
             f.to_klee_code_functions();
+            f.write_simple_json_file();
         }
     }
     

@@ -46,11 +46,17 @@ namespace le
     string VariableTable::to_string() const
     {
         stringstream ss;
+        size_t size = T.size();
+        size_t count = 1;
         ss << "{";
         for (const auto &v : T)
         {
             v.second.add_to_stringstream(ss);
-            ss << ", ";
+            if (count < size)
+            {
+                ss << ", ";
+            }
+            ++count;
         }
         ss << "}";
         return ss.str();

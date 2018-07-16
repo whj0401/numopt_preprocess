@@ -7,3 +7,4 @@ do
     ./run_klee.sh $bc
 done
 
+python3 expr2paths.py `ls *.expr`

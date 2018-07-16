@@ -28,8 +28,13 @@ namespace le
         }
     }
     
-    Function::Function(const std::string &_func_name, SgFunctionDeclaration *_decl) :
-            func_name(_func_name), decl(_decl)
+    VariableTable Function::get_variables_declared_in_function() const
+    {
+        return root->get_all_declared_variables();
+    }
+    
+    Function::Function(const std::string &_func_name, SgFunctionDeclaration *_decl, const string &_program_name) :
+            func_name(_func_name), decl(_decl), program_name(_program_name)
     {
         if (decl == nullptr)
         {
@@ -85,7 +90,7 @@ namespace le
         ss << "}" << endl;
     }
     
-    void Function::to_klee_code_functions()
+    void Function::to_klee_code_functions() const
     {
         stringstream ss;
         ofstream out(klee_output_dir + func_name + source_code_file_postfix);
@@ -113,6 +118,36 @@ namespace le
         {
             l->to_klee_code_functions();
         }
+    }
+    
+    void Function::write_simple_json_file() const
+    {
+        stringstream ss;
+        ofstream simple_json(klee_output_dir + func_name + ".json");
+        string tab = generate_tab(1);
+        VariableTable tmp = get_variables_declared_in_function() + input_parameters;
+        ss << "{" << endl;
+        ss << tab << "\"program_name\": " << "\"" << program_name << "\"," << endl;
+        ss << tab << "\"function_name\": " << "\"" << func_name << "\"," << endl;
+        ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
+        ss << tab << "\"input_variables\": [";
+        size_t size = input_parameters.T.size();
+        size_t count = 1;
+        for (auto &v : input_parameters.T)
+        {
+            ss << "\"" << v.second.var_name << "\"";
+            if (count < size)
+            {
+                ss << ", ";
+            }
+            ++count;
+        }
+        ss << "]," << endl;
+        ss << tab << "\"return\": " << "\"__return__\"," << endl;
+        ss << tab << "\"paths\": []" << endl;
+        ss << "}" << endl;
+        simple_json << ss.str();
+        simple_json.close();
     }
     
 }
