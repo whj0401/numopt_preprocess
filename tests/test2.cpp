@@ -39,6 +39,14 @@ iRRAM::REAL test2(iRRAM::REAL a, iRRAM::REAL b)
         return c2;
     }
     iRRAM::REAL c4 = sin(c2);
+    if (c3 > 0)
+    {
+        c4 = 2 * c4;
+    }
+    else
+    {
+        c4 = (-2) * c4;
+    }
     while (c3 < c4)
     {
         c3 = c3 + c4 / 2;

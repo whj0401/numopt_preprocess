@@ -117,13 +117,14 @@ namespace le
         for (auto &l : loops)
         {
             l->to_klee_code_functions();
+            l->write_simple_json_file();
         }
     }
     
     void Function::write_simple_json_file() const
     {
         stringstream ss;
-        ofstream simple_json(klee_output_dir + func_name + ".json");
+        ofstream simple_json(klee_output_dir + func_name + ".json.function");
         string tab = generate_tab(1);
         VariableTable tmp = get_variables_declared_in_function() + input_parameters;
         ss << "{" << endl;
@@ -148,6 +149,14 @@ namespace le
         ss << "}" << endl;
         simple_json << ss.str();
         simple_json.close();
+
+//        set<shared_ptr<Code_Tree_Node>> nodes;
+//        set<shared_ptr<Loop>> loops;
+//        root->get_all_nodes_need_to_be_printed(nodes, loops);
+//        for(auto & l : loops)
+//        {
+//            l->write_simple_json_file();
+//        }
     }
     
 }

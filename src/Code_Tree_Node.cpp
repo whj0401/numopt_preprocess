@@ -385,7 +385,7 @@ namespace le
     
     void Code_Tree_Node::add_left_value(const le::Variable &var)
     {
-        if (lvars.has_variable(var.var_name)) return;
+        if (lvars.has_variable(var.var_name) && is_leaf_node()) return;
         auto no_ends = get_all_no_end_leaves_ptr();
         for (auto &ptr : no_ends)
         {

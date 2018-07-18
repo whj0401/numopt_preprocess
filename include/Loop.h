@@ -25,9 +25,12 @@ namespace le
     class Loop : public enable_shared_from_this<Loop>
     {
         void write_loop_correspond_main_func(stringstream &ss) const;
+    
+        VariableTable get_variables_declared_in_loop() const;
         
     public:
         size_t ID;
+        VariableTable forloop_initializer;
         VariableTable out_loop_vars;
         VariableTable lval_vars;
         shared_ptr<Code_Tree_Node> root;
@@ -43,6 +46,8 @@ namespace le
         string get_loop_func_name() const;
     
         void to_klee_code_functions() const;
+    
+        void write_simple_json_file() const;
         
         string to_string() const;
     };

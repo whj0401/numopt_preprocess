@@ -100,6 +100,40 @@ namespace le
         }
     }
     
+    VariableTable Loop::get_variables_declared_in_loop() const
+    {
+        return root->get_all_declared_variables();
+    }
+    
+    void Loop::write_simple_json_file() const
+    {
+        stringstream ss;
+        ofstream simple_json(klee_output_dir + get_loop_func_name() + ".json");
+        string tab = generate_tab(1);
+        VariableTable tmp = get_variables_declared_in_loop();
+        tmp = tmp + forloop_initializer;
+        ss << "{" << endl;
+        ss << tab << "\"type\": " << "\"loop\"," << endl;
+        ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
+        ss << tab << "\"initializer\": [";
+        size_t size = forloop_initializer.T.size();
+        size_t count = 1;
+        for (auto &v : forloop_initializer.T)
+        {
+            ss << "\"" << v.second.var_name << "\"";
+            if (count < size)
+            {
+                ss << ", ";
+            }
+            ++count;
+        }
+        ss << "]," << endl;
+        ss << tab << "\"loop_body\": []" << endl;
+        ss << "}" << endl;
+        simple_json << ss.str();
+        simple_json.close();
+    }
+    
     string Loop::to_string() const
     {
         stringstream ss;
