@@ -38,6 +38,9 @@ namespace le
         Loop();
         
         void initial_out_loop_variables(const VariableTable &vars);
+    
+        // initial for initializer must be done before initial_out_loop_variables
+        void init_for_initializer(SgForStatement *for_stmt);
         
         void init_for_statement(SgForStatement *for_stmt);
         

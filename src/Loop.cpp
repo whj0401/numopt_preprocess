@@ -26,13 +26,94 @@ namespace le
     
     void Loop::initial_out_loop_variables(const VariableTable &vars)
     {
-        out_loop_vars = vars;
+        out_loop_vars = out_loop_vars + vars;
         root->initial_make_symbolics(out_loop_vars);
+    }
+    
+    void Loop::init_for_initializer(SgForStatement *for_stmt)
+    {
+        SgForInitStatement *init_block = for_stmt->get_for_init_stmt();
+        SgStatementPtrList &init_stmts = init_block->get_init_stmt();
+        for (auto stmt : init_stmts)
+        {
+            // just handle variable declarations and initializations
+            if (auto decl = dynamic_cast<SgVariableDeclaration *>(stmt))
+            {
+                SgInitializedNamePtrList &list = decl->get_variables();
+                for (SgInitializedName *n : list)
+                {
+                    SgType *type = n->get_type();
+                    string var_name = n->get_name();
+                    // check type must be iRRAM::REAL, do no process on basic type now!
+//            if(type->get_mangled() != REAL_MANGLED)
+//                return;
+                    if (auto initializer = dynamic_cast<SgConstructorInitializer *>(n->get_initptr()))
+                    {
+                        // for iRRAM::REAL type, initializer with constructor, rather than SgAssignInitializer
+                        // REAL constructor with 1 parameter
+                        SgExprListExp *list_exp = initializer->get_args();
+                        if (list_exp->get_expressions().empty())
+                        {
+                            Variable var(var_name, type, nullptr);
+                            forloop_initializer.add_variable(var);
+                            out_loop_vars.add_variable(var);
+                        }
+                        else
+                        {
+                            Variable var(var_name, type, list_exp->get_expressions()[0]);
+                            forloop_initializer.add_variable(var);
+                            out_loop_vars.add_variable(var);
+                        }
+                    }
+                    else if (auto initializer = dynamic_cast<SgAssignInitializer *>(n->get_initptr()))
+                    {
+                        // basic type initializer
+                        Variable var(var_name, type, initializer->get_operand());
+                        forloop_initializer.add_variable(var);
+                        out_loop_vars.add_variable(var);
+                    }
+                    else
+                    {
+                        // no assign expression. do not regard as left value
+                        Variable var(var_name, type);
+                        forloop_initializer.add_variable(var);
+                        out_loop_vars.add_variable(var);
+                    }
+                }
+            }
+        }
     }
     
     void Loop::init_for_statement(SgForStatement *for_stmt)
     {
-        // TODO
+        // init_for_initializer should have been called
+        // handle condition
+        SgStatement *test_stmt = for_stmt->get_test();
+        SgExpression *condition = nullptr;
+        // condition may be null e.g. for(;;) {}
+        if (auto expr_stmt = dynamic_cast<SgExprStatement *>(test_stmt))
+        {
+            condition = expr_stmt->get_expression();
+        }
+        if (condition != nullptr)
+        {
+            root->initial_if_else_branch(condition);
+            root->else_node->set_broke();
+        }
+    
+        // handle loop body
+        SgStatement *body_stmt = for_stmt->get_loop_body();
+        root->handle_statement(body_stmt);
+    
+        // handle increment
+        SgExpression *inc_expr = for_stmt->get_increment();
+        root->handle_forloop_increment(inc_expr, forloop_initializer);
+    
+        // add variables initilizer to left value table
+        for (auto &v : forloop_initializer.T)
+        {
+            root->add_left_value(v.second);
+        }
     }
     
     void Loop::init_while_statement(SgWhileStmt *while_stmt)
@@ -117,17 +198,26 @@ namespace le
         ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
         ss << tab << "\"initializer\": {";
         size_t size = forloop_initializer.T.size();
-        // TODO forloop initializer, not implemented
-//        size_t count = 1;
-//        for (auto &v : forloop_initializer.T)
-//        {
-//            ss << "\"" << v.second.var_name << "\"";
-//            if (count < size)
-//            {
-//                ss << ", ";
-//            }
-//            ++count;
-//        }
+        // forloop initializer
+        size_t count = 1;
+        for (auto &v : forloop_initializer.T)
+        {
+            ss << "\"" << v.second.var_name << "\":" << "\"";
+            if (v.second.initExpr != nullptr)
+            {
+                ss << v.second.initExpr->unparseToString();
+            }
+            else
+            {
+                ss << "0";
+            }
+            ss << "\"";
+            if (count < size)
+            {
+                ss << ", ";
+            }
+            ++count;
+        }
         ss << "}," << endl;
         ss << tab << "\"loop_body\": []" << endl;
         ss << "}" << endl;

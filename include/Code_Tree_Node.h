@@ -64,6 +64,8 @@ namespace le
         void initial_make_symbolics(const VariableTable &input);
         
         void add_stmt(const SgStatement *stmt);
+    
+        void add_str_4_forloop_increment(const string &str);
         
         void add_str(const string &str);
         
@@ -92,6 +94,8 @@ namespace le
         void handle_var_declaration(SgVariableDeclaration *decl);
     
         void handle_expression(SgExpression *expr);
+    
+        void handle_forloop_increment(SgExpression *expr, VariableTable &forloop_initializer);
         
         void write_code_to_ss(stringstream &ss, unsigned int tab_num) const;
     
@@ -110,6 +114,8 @@ namespace le
         VariableTable get_all_declared_variables() const;
         
         ~Code_Tree_Node();
+    
+        friend class Loop;
     };
 }
 

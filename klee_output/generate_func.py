@@ -9,6 +9,13 @@ dir = './'
 
 type_transform_map = {"iRRAM__scope__class_REAL": "decimal", "i": "integer", "d": "decimal", "b": "bool"}
 
+
+def transform_var_type(variables):
+    for var_name in variables.keys():
+        variables[var_name] = type_transform_map[variables[var_name]]
+    return variables
+
+
 def read_json(file_name):
     file_name = dir + file_name
     file = open(file_name, "r")
@@ -17,6 +24,7 @@ def read_json(file_name):
 
 def handle_loop_json(loop, loop_name):
     loop_body = read_json(loop_name + postfix_node)
+    loop['variables'] = transform_var_type(loop['variables'])
     loop['loop_body'] = handle_paths_json(loop_body)
     # there are some differences compared to walker's pth file
     # use a python script transform to pth for walker's expression optimization
@@ -81,8 +89,7 @@ def handle_function_json(func):
     func['paths'] = handle_paths_json(paths)
     # add __return__ variable to function variables table
     func['variables']['__return__'] = 'iRRAM__scope__class_REAL'
-    for var_name in func['variables'].keys():
-        func['variables'][var_name] = type_transform_map[func['variables'][var_name]]
+    func['variables'] = transform_var_type(func['variables'])
     return func
 
 

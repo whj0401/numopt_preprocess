@@ -157,6 +157,24 @@ namespace le
         }
     }
     
+    void Code_Tree_Node::add_str_4_forloop_increment(const string &str)
+    {
+        if (has_returned || has_broken) return;
+        if (next_tree_root != nullptr)
+        {
+            next_tree_root->add_str_4_forloop_increment(str);
+        }
+        else if (condition != nullptr)
+        {
+            if_node->add_str_4_forloop_increment(str);
+            else_node->add_str_4_forloop_increment(str);
+        }
+        else
+        {
+            code_lines.push_back(str);
+        }
+    }
+    
     void Code_Tree_Node::add_str(const string &str)
     {
         if (!can_add_stmt()) return;
@@ -368,7 +386,15 @@ namespace le
     
     void Code_Tree_Node::handle_for_statement(SgForStatement *for_stmt)
     {
-        // TODO
+        auto leaf_nodes = get_all_no_end_leaves_ptr();
+        shared_ptr<Loop> tmp_loop = make_shared<Loop>();
+        tmp_loop->init_for_initializer(for_stmt);
+        tmp_loop->initial_out_loop_variables(input_vars + declared_vars);
+        tmp_loop->init_for_statement(for_stmt);
+        for (auto &ptr : leaf_nodes)
+        {
+            ptr->initial_next_root_node(tmp_loop);
+        }
     }
     
     void Code_Tree_Node::handle_while_statement(SgWhileStmt *while_stmt)
@@ -538,6 +564,11 @@ namespace le
                 handle_expression(ref);
             }
         }
+    }
+    
+    void Code_Tree_Node::handle_forloop_increment(SgExpression *expr, VariableTable &forloop_initializer)
+    {
+        this->add_str_4_forloop_increment(expr->unparseToString() + ";");
     }
     
     void Code_Tree_Node::write_code_to_ss(stringstream &ss, unsigned int tab_num) const
