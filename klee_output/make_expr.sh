@@ -12,4 +12,7 @@ rm -rf klee-out-*
 
 python3 expr2paths.py `ls *.expr`
 
-python3 generate_func.py `ls *.function`
+for func in `ls *.function`
+do
+    python3 generate_func.py $func
+done

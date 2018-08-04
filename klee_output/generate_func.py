@@ -7,6 +7,7 @@ postfix_output = '.pth'
 
 dir = './'
 
+type_transform_map = {"iRRAM__scope__class_REAL": "decimal", "i": "integer", "d": "decimal", "b": "bool"}
 
 def read_json(file_name):
     file_name = dir + file_name
@@ -17,10 +18,14 @@ def read_json(file_name):
 def handle_loop_json(loop, loop_name):
     loop_body = read_json(loop_name + postfix_node)
     loop['loop_body'] = handle_paths_json(loop_body)
+    # there are some differences compared to walker's pth file
+    # use a python script transform to pth for walker's expression optimization
     return loop
 
 
 def handle_path_json(path):
+    if path['constraint'] == '':
+        path['constraint'] = 'true'
     content = path['path'][0]["content"]
     new_content = []
     loop = {}
@@ -52,13 +57,13 @@ def handle_path_json(path):
         else:
             path['next_paths'] = next_root_node
     if do_break:
-        path['break'] = 'True'
+        path['break'] = 'true'
     else:
-        path['break'] = 'False'
+        path['break'] = 'false'
     if do_continue:
-        path['continue'] = 'True'
+        path['continue'] = 'true'
     else:
-        path['continue'] = 'False'
+        path['continue'] = 'false'
     return path
 
 
@@ -76,6 +81,8 @@ def handle_function_json(func):
     func['paths'] = handle_paths_json(paths)
     # add __return__ variable to function variables table
     func['variables']['__return__'] = 'iRRAM__scope__class_REAL'
+    for var_name in func['variables'].keys():
+        func['variables'][var_name] = type_transform_map[func['variables'][var_name]]
     return func
 
 

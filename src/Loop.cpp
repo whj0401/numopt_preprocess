@@ -115,19 +115,20 @@ namespace le
         ss << "{" << endl;
         ss << tab << "\"type\": " << "\"loop\"," << endl;
         ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
-        ss << tab << "\"initializer\": [";
+        ss << tab << "\"initializer\": {";
         size_t size = forloop_initializer.T.size();
-        size_t count = 1;
-        for (auto &v : forloop_initializer.T)
-        {
-            ss << "\"" << v.second.var_name << "\"";
-            if (count < size)
-            {
-                ss << ", ";
-            }
-            ++count;
-        }
-        ss << "]," << endl;
+        // TODO forloop initializer, not implemented
+//        size_t count = 1;
+//        for (auto &v : forloop_initializer.T)
+//        {
+//            ss << "\"" << v.second.var_name << "\"";
+//            if (count < size)
+//            {
+//                ss << ", ";
+//            }
+//            ++count;
+//        }
+        ss << "}," << endl;
         ss << tab << "\"loop_body\": []" << endl;
         ss << "}" << endl;
         simple_json << ss.str();
