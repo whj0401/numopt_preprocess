@@ -195,8 +195,9 @@ namespace le
         tmp = tmp + forloop_initializer;
         ss << "{" << endl;
         ss << tab << "\"type\": " << "\"loop\"," << endl;
-        ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
-        ss << tab << "\"initializer\": {";
+        ss << tab << "\"content\": " << "{" << endl;
+        ss << tab << TAB << "\"variables\": " << tmp.to_string() << "," << endl;
+        ss << tab << TAB << "\"initialize\": {";
         size_t size = forloop_initializer.T.size();
         // forloop initializer
         size_t count = 1;
@@ -219,7 +220,8 @@ namespace le
             ++count;
         }
         ss << "}," << endl;
-        ss << tab << "\"loop_body\": []" << endl;
+        ss << tab << TAB << "\"loop_body\": []" << endl;
+        ss << tab << "}" << endl;
         ss << "}" << endl;
         simple_json << ss.str();
         simple_json.close();

@@ -24,10 +24,8 @@ def read_json(file_name):
 
 def handle_loop_json(loop, loop_name):
     loop_body = read_json(loop_name + postfix_node)
-    loop['variables'] = transform_var_type(loop['variables'])
-    loop['loop_body'] = handle_paths_json(loop_body)
-    # there are some differences compared to walker's pth file
-    # use a python script transform to pth for walker's expression optimization
+    loop['content']['variables'] = transform_var_type(loop['content']['variables'])
+    loop['content']['loop_body'] = handle_paths_json(loop_body)
     return loop
 
 
