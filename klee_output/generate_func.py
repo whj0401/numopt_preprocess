@@ -32,6 +32,7 @@ def handle_loop_json(loop, loop_name):
 def handle_path_json(path):
     if path['constraint'] == '':
         path['constraint'] = 'true'
+    path['constraint'] = path['constraint'].replace(' ', '')  # remove all space
     content = path['path'][0]["content"]
     new_content = []
     loop = {}
