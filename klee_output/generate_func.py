@@ -71,6 +71,8 @@ def handle_path_json(path):
         path['continue'] = 'true'
     else:
         path['continue'] = 'false'
+    if len(new_content) == 0 and len(loop) == 0 and len(next_root_node) == 0:
+        path['path'] = []
     return path
 
 
@@ -98,3 +100,14 @@ if __name__ == "__main__":
     new_func = handle_function_json(func_json)
     output_file = open(file_name + postfix_output, 'w')
     json.dump(new_func, output_file, indent=4)
+    output_file.close()
+    # adapt to walker's experiment
+    output_file = open(file_name + postfix_output, 'r')
+    content = output_file.read()
+    # change 'constraint' to 'constrain'
+    content = content.replace('\"constraint\":', '\"constrain\":')
+    # change 'initializer' to 'initialize'
+    content = content.replace('\"initializer\":', '\"initialize\":')
+    output_file.close()
+    output_file = open(file_name + postfix_output, 'w')
+    output_file.write(content)

@@ -197,7 +197,7 @@ namespace le
         ss << tab << "\"type\": " << "\"loop\"," << endl;
         ss << tab << "\"content\": " << "{" << endl;
         ss << tab << TAB << "\"variables\": " << tmp.to_string() << "," << endl;
-        ss << tab << TAB << "\"initialize\": {";
+        ss << tab << TAB << "\"initializer\": {";
         size_t size = forloop_initializer.T.size();
         // forloop initializer
         size_t count = 1;
