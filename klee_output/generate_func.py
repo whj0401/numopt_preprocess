@@ -58,9 +58,10 @@ def handle_path_json(path):
     if len(loop) > 0:
         path['path'].append(loop)
     if len(next_root_node) > 0:
-        if len(next_root_node) == 1:
+        if len(next_root_node) == 1 and next_root_node[0]['constraint'] == 'true':
             # to make it compatible with old solution
-            path['path'].append(next_root_node[0])
+            for p in next_root_node[0]['path']:
+                path['path'].append(p)
         else:
             path['next_paths'] = next_root_node
     if do_break:
