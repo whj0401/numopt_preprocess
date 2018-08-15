@@ -35,6 +35,7 @@ namespace le
         string func_name;
         SgFunctionDeclaration *decl;
         VariableTable input_parameters;
+        vector<string> input_parameters_list; // we need to record the order of input parameters
         shared_ptr<Code_Tree_Node> root;
     
         Function(const string &_func_name, SgFunctionDeclaration *_decl, const string &_program_name);

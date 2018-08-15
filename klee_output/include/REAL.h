@@ -40,6 +40,8 @@ namespace iRRAM
         
         REAL(const int i);
         
+        REAL(const double d);
+        
         REAL(const REAL &y);
 
 // Copy Constructor: ---------------------------
@@ -58,6 +60,10 @@ namespace iRRAM
         
         friend REAL operator+(const int n, const REAL &x);
         
+        friend REAL operator+(const REAL &x, const double d);
+        
+        friend REAL operator+(const double d, const REAL &x);
+        
         friend REAL &operator+=(REAL &x, const REAL &y);
         
         friend REAL operator-(const REAL &x, const REAL &y);
@@ -65,6 +71,10 @@ namespace iRRAM
         friend REAL operator-(const REAL &x, const int n);
         
         friend REAL operator-(const int n, const REAL &x);
+        
+        friend REAL operator-(const REAL &x, const double d);
+        
+        friend REAL operator-(const double d, const REAL &x);
         
         friend REAL operator-(const REAL &x);
         
@@ -74,6 +84,10 @@ namespace iRRAM
         
         friend REAL operator*(const int n, const REAL &x);
         
+        friend REAL operator*(const REAL &x, const double d);
+        
+        friend REAL operator*(const double d, const REAL &x);
+        
         friend REAL &operator*=(REAL &x, const REAL &y);
         
         friend REAL operator/(const REAL &x, const REAL &y);
@@ -81,6 +95,10 @@ namespace iRRAM
         friend REAL operator/(const REAL &x, const int n);
         
         friend REAL operator/(const int n, const REAL &x);
+        
+        friend REAL operator/(const REAL &x, const double d);
+        
+        friend REAL operator/(const double d, const REAL &x);
         
         friend REAL operator<<(const REAL &x, const int n);
         
@@ -100,11 +118,19 @@ namespace iRRAM
         
         friend bool operator<(const int x, const REAL &y);
         
+        friend bool operator<(const REAL &x, const double y);
+        
+        friend bool operator<(const double x, const REAL &y);
+        
         friend bool operator<=(const REAL &x, const REAL &y);
         
         friend bool operator<=(const REAL &x, const int y);
         
         friend bool operator<=(const int x, const REAL &y);
+        
+        friend bool operator<=(const REAL &x, const double y);
+        
+        friend bool operator<=(const double x, const REAL &y);
         
         friend bool operator>(const REAL &x, const REAL &y);
         
@@ -112,11 +138,19 @@ namespace iRRAM
         
         friend bool operator>(const int x, const REAL &y);
         
+        friend bool operator>(const REAL &x, const double y);
+        
+        friend bool operator>(const double x, const REAL &y);
+        
         friend bool operator>=(const REAL &x, const REAL &y);
         
         friend bool operator>=(const REAL &x, const int y);
         
         friend bool operator>=(const int x, const REAL &y);
+        
+        friend bool operator>=(const REAL &x, const double y);
+        
+        friend bool operator>=(const double x, const REAL &y);
         
         friend bool operator==(const REAL &x, const REAL &y);
         
@@ -124,11 +158,19 @@ namespace iRRAM
         
         friend bool operator==(const int x, const REAL &y);
         
+        friend bool operator==(const REAL &x, const double y);
+        
+        friend bool operator==(const double x, const REAL &y);
+        
         friend bool operator!=(const REAL &x, const REAL &y);
         
         friend bool operator!=(const REAL &x, const int y);
         
         friend bool operator!=(const int x, const REAL &y);
+        
+        friend bool operator!=(const REAL &x, const double y);
+        
+        friend bool operator!=(const double x, const REAL &y);
         
         
         friend bool positive(const REAL &x, const int k);
@@ -207,6 +249,10 @@ namespace iRRAM
         value = i;
     };
     
+    inline REAL::REAL(const double d)
+    {
+        value = d;
+    }
     
     inline REAL::REAL(const REAL &y)
     {
@@ -240,17 +286,26 @@ namespace iRRAM
         return REAL(x.value + i);
     };
     
+    inline REAL operator+(const int i, const REAL &x)
+    {
+        return (x + i);
+    };
+    
+    inline REAL operator+(const REAL &x, const double i)
+    {
+        return REAL(x.value + i);
+    };
+    
+    inline REAL operator+(const double i, const REAL &x)
+    {
+        return REAL(x.value + i);
+    };
     
     inline REAL &operator+=(REAL &x, const REAL &y)
     {
         x.value = x.value + y.value;
         return x;
     };
-    
-    inline REAL operator+(const int i, const REAL &x)
-    {
-        return (x + i);
-    }
     
     inline REAL operator-(const REAL &x, const REAL &y)
     {
@@ -263,6 +318,16 @@ namespace iRRAM
     };
     
     inline REAL operator-(const int n, const REAL &x)
+    {
+        return REAL(n - x.value);
+    };
+    
+    inline REAL operator-(const REAL &x, const double n)
+    {
+        return REAL(x.value - n);
+    };
+    
+    inline REAL operator-(const double n, const REAL &x)
     {
         return REAL(n - x.value);
     };
@@ -283,8 +348,18 @@ namespace iRRAM
         return REAL(x.value * n);
     }
     
-    
     inline REAL operator*(const int n, const REAL &x)
+    {
+        return (x * n);
+    }
+    
+    inline REAL operator*(const REAL &x, const double n)
+    {
+        return REAL(x.value * n);
+    }
+    
+    
+    inline REAL operator*(const double n, const REAL &x)
     {
         return (x * n);
     }
@@ -312,6 +387,16 @@ namespace iRRAM
     }
     
     inline REAL operator/(const REAL &x, const int n)
+    {
+        return REAL(x.value / n);
+    }
+    
+    inline REAL operator/(const double n, const REAL &y)
+    {
+        return REAL(n) / y;
+    }
+    
+    inline REAL operator/(const REAL &x, const double n)
     {
         return REAL(x.value / n);
     }
@@ -458,6 +543,7 @@ namespace iRRAM
     
     int acosech(int);
     
+    int gamma(int);
     
     REAL real_pi()
     {
@@ -622,6 +708,11 @@ namespace iRRAM
     REAL acosech(const REAL &a)
     {
         return REAL(acosech(a.value));
+    }
+    
+    REAL gamma(const REAL &x)
+    {
+        return REAL(gamma(x.value));
     }
 } // namespace iRRAM
 

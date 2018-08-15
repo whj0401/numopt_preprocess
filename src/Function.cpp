@@ -14,6 +14,7 @@ namespace le
     void Function::add_input_parameter(const le::Variable &v)
     {
         input_parameters.add_variable(v);
+        input_parameters_list.push_back(v.var_name);
     }
     
     void Function::add_input_parameterlist()
@@ -132,11 +133,13 @@ namespace le
         ss << tab << "\"function_name\": " << "\"" << func_name << "\"," << endl;
         ss << tab << "\"variables\": " << tmp.to_string() << "," << endl;
         ss << tab << "\"input_variables\": [";
-        size_t size = input_parameters.T.size();
+        // use the input_parameters_list to print.
+        // input_parameters is a set, no order information of inputs
+        size_t size = input_parameters_list.size();
         size_t count = 1;
-        for (auto &v : input_parameters.T)
+        for (auto &v : input_parameters_list)
         {
-            ss << "\"" << v.second.var_name << "\"";
+            ss << "\"" << v << "\"";
             if (count < size)
             {
                 ss << ", ";
