@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "paths": [
+        {
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(exp(x)/(-1+exp(x)))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "break": "false",
+            "continue": "false",
+            "constrain": "true"
+        }
+    ],
+    "program_name": "expq2",
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "function_name": "irram_expq2",
+    "input_variables": [
+        "x"
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "return": "r",
+    "input_variables": [
+        "x",
+        "e"
+    ],
+    "function_name": "irram_2tan",
+    "paths": [
+        {
+            "constrain": "true",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(tan((x+e))-tan(x))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "break": "false",
+            "continue": "false"
+        }
+    ],
+    "variables": {
+        "e": "decimal",
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "program_name": "2tan"
+}

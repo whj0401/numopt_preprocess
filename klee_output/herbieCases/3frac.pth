@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "paths": [
+        {
+            "continue": "false",
+            "break": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(((1/(1+x))-(2/x))+(1/(-1+x)))"
+                        ]
+                    ]
+                }
+            ],
+            "constrain": "true"
+        }
+    ],
+    "function_name": "irram_3frac",
+    "variables": {
+        "x": "decimal",
+        "r": "decimal"
+    },
+    "input_variables": [
+        "x"
+    ],
+    "program_name": "3frac"
+}

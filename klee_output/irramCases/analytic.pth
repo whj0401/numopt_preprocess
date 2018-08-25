@@ -1,0 +1,80 @@
+{
+    "variables": {
+        "powx": "decimal",
+        "x": "decimal",
+        "res": "decimal",
+        "degree": "integer"
+    },
+    "paths": [
+        {
+            "constrain": "true",
+            "continue": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "powx",
+                            "1"
+                        ],
+                        [
+                            "res",
+                            "0"
+                        ]
+                    ],
+                    "type": "procedure"
+                },
+                {
+                    "content": {
+                        "variables": {
+                            "i": "integer"
+                        },
+                        "loop_body": [
+                            {
+                                "constrain": "(i<degree)",
+                                "continue": "false",
+                                "path": [
+                                    {
+                                        "content": [
+                                            [
+                                                "i",
+                                                "(1+i)"
+                                            ],
+                                            [
+                                                "powx",
+                                                "(powx*x)"
+                                            ],
+                                            [
+                                                "res",
+                                                "(res+(powx*x))"
+                                            ]
+                                        ],
+                                        "type": "procedure"
+                                    }
+                                ],
+                                "break": "false"
+                            },
+                            {
+                                "constrain": "!(i<degree)",
+                                "continue": "false",
+                                "path": [],
+                                "break": "true"
+                            }
+                        ],
+                        "initialize": {
+                            "i": "0"
+                        }
+                    },
+                    "type": "loop"
+                }
+            ],
+            "break": "false"
+        }
+    ],
+    "input_variables": [
+        "x",
+        "degree"
+    ],
+    "return": "res",
+    "program_name": "analytic",
+    "function_name": "evaluate"
+}

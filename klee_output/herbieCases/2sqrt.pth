@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "function_name": "irram_2sqrt",
+    "paths": [
+        {
+            "constrain": "true",
+            "continue": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(sqrt((1+x))-sqrt(x))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "break": "false"
+        }
+    ],
+    "program_name": "2sqrt",
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "input_variables": [
+        "x"
+    ]
+}

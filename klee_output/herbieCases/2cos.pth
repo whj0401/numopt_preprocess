@@ -1,0 +1,32 @@
+{
+    "variables": {
+        "r": "decimal",
+        "x": "decimal",
+        "e": "decimal"
+    },
+    "return": "r",
+    "program_name": "2cos",
+    "function_name": "irram_2cos",
+    "input_variables": [
+        "x",
+        "e"
+    ],
+    "paths": [
+        {
+            "continue": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(cos((x+e))-cos(x))"
+                        ]
+                    ]
+                }
+            ],
+            "constrain": "true",
+            "break": "false"
+        }
+    ]
+}

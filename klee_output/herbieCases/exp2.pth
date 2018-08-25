@@ -1,0 +1,30 @@
+{
+    "function_name": "irram_exp2",
+    "variables": {
+        "x": "decimal",
+        "r": "decimal"
+    },
+    "paths": [
+        {
+            "constrain": "true",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(-2+(exp(x)+exp((0-x))))"
+                        ]
+                    ]
+                }
+            ],
+            "continue": "false",
+            "break": "false"
+        }
+    ],
+    "input_variables": [
+        "x"
+    ],
+    "program_name": "exp2",
+    "return": "r"
+}

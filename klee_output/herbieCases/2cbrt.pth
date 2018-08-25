@@ -1,0 +1,33 @@
+{
+    "program_name": "2cbrt",
+    "input_variables": [
+        "x"
+    ],
+    "return": "r",
+    "variables": {
+        "x": "decimal",
+        "a": "decimal",
+        "b": "decimal",
+        "r": "decimal",
+        "n": "decimal"
+    },
+    "function_name": "irram_2cbrt",
+    "paths": [
+        {
+            "continue": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(pow((1+x), 0)-pow(x, 0))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "constrain": "true",
+            "break": "false"
+        }
+    ]
+}

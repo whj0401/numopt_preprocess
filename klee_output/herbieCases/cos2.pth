@@ -1,0 +1,30 @@
+{
+    "input_variables": [
+        "x"
+    ],
+    "return": "__return__",
+    "program_name": "cos2",
+    "function_name": "irram_cos2",
+    "variables": {
+        "__return__": "decimal",
+        "x": "decimal"
+    },
+    "paths": [
+        {
+            "constrain": "true",
+            "break": "false",
+            "continue": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "__return__",
+                            "((1-cos(x))/(x*x))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ]
+        }
+    ]
+}

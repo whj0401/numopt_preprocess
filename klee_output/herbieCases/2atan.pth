@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "paths": [
+        {
+            "constrain": "true",
+            "break": "false",
+            "continue": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(atan((1+N))-atan(N))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ]
+        }
+    ],
+    "input_variables": [
+        "N"
+    ],
+    "variables": {
+        "r": "decimal",
+        "N": "decimal"
+    },
+    "function_name": "irram_2atan",
+    "program_name": "2atan"
+}

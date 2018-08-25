@@ -1,0 +1,35 @@
+{
+    "variables": {
+        "d": "decimal",
+        "c": "decimal",
+        "a": "decimal",
+        "r": "decimal",
+        "b": "decimal"
+    },
+    "input_variables": [
+        "a",
+        "b",
+        "c"
+    ],
+    "function_name": "irram_quadp",
+    "program_name": "quadp",
+    "return": "r",
+    "paths": [
+        {
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "((sqrt(((b*b)-((4*a)*c)))-b)/(2*a))"
+                        ]
+                    ]
+                }
+            ],
+            "break": "false",
+            "constrain": "true",
+            "continue": "false"
+        }
+    ]
+}

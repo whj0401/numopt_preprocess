@@ -1,0 +1,69 @@
+{
+    "variables": {
+        "z": "decimal",
+        "n": "integer"
+    },
+    "input_variables": [
+        "n"
+    ],
+    "return": "z",
+    "paths": [
+        {
+            "constrain": "true",
+            "continue": "false",
+            "break": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "z",
+                            "1"
+                        ]
+                    ],
+                    "type": "procedure"
+                },
+                {
+                    "content": {
+                        "variables": {
+                            "i": "integer"
+                        },
+                        "loop_body": [
+                            {
+                                "constrain": "!(i<n)",
+                                "continue": "false",
+                                "break": "true",
+                                "path": []
+                            },
+                            {
+                                "constrain": "(i<n)",
+                                "continue": "false",
+                                "break": "false",
+                                "path": [
+                                    {
+                                        "content": [
+                                            [
+                                                "i",
+                                                "(1+i)"
+                                            ],
+                                            [
+                                                "z",
+                                                "(z+(1/fac(i)))"
+                                            ]
+                                        ],
+                                        "type": "procedure"
+                                    }
+                                ]
+                            }
+                        ],
+                        "initialize": {
+                            "i": "1"
+                        }
+                    },
+                    "type": "loop"
+                }
+            ]
+        }
+    ],
+    "program_name": "e_example",
+    "function_name": "e_example"
+}

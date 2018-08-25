@@ -1,0 +1,30 @@
+{
+    "program_name": "invcot",
+    "return": "__return__",
+    "paths": [
+        {
+            "constrain": "true",
+            "break": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "__return__",
+                            "((1/x)-(1/tan(x)))"
+                        ]
+                    ]
+                }
+            ],
+            "continue": "false"
+        }
+    ],
+    "function_name": "invcot",
+    "variables": {
+        "__return__": "decimal",
+        "x": "decimal"
+    },
+    "input_variables": [
+        "x"
+    ]
+}

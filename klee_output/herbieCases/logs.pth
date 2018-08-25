@@ -1,0 +1,30 @@
+{
+    "paths": [
+        {
+            "continue": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(-1+(((1+n)*log((1+n)))-(n*log(n))))"
+                        ]
+                    ]
+                }
+            ],
+            "constrain": "true",
+            "break": "false"
+        }
+    ],
+    "variables": {
+        "n": "decimal",
+        "r": "decimal"
+    },
+    "input_variables": [
+        "n"
+    ],
+    "program_name": "logs",
+    "function_name": "irram_logs",
+    "return": "r"
+}

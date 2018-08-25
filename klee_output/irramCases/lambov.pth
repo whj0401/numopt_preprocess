@@ -1,0 +1,69 @@
+{
+    "return": "s",
+    "function_name": "lambov",
+    "paths": [
+        {
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "s",
+                            "exp(1)"
+                        ]
+                    ]
+                },
+                {
+                    "type": "loop",
+                    "content": {
+                        "initialize": {
+                            "i": "n"
+                        },
+                        "variables": {
+                            "i": "integer"
+                        },
+                        "loop_body": [
+                            {
+                                "path": [
+                                    {
+                                        "type": "procedure",
+                                        "content": [
+                                            [
+                                                "i",
+                                                "(-1+i)"
+                                            ],
+                                            [
+                                                "s",
+                                                "(s-(1/fac(i)))"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "constrain": "(0<=i)",
+                                "continue": "false",
+                                "break": "false"
+                            },
+                            {
+                                "path": [],
+                                "constrain": "!(0<=i)",
+                                "continue": "false",
+                                "break": "true"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "constrain": "true",
+            "continue": "false",
+            "break": "false"
+        }
+    ],
+    "variables": {
+        "n": "integer",
+        "s": "decimal"
+    },
+    "input_variables": [
+        "n"
+    ],
+    "program_name": "lambov"
+}

@@ -1,0 +1,37 @@
+{
+    "variables": {
+        "ae": "decimal",
+        "r": "decimal",
+        "be": "decimal",
+        "a": "decimal",
+        "e": "decimal",
+        "b": "decimal",
+        "abe": "decimal"
+    },
+    "program_name": "expq3",
+    "paths": [
+        {
+            "continue": "false",
+            "break": "false",
+            "constrain": "true",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "((e*(-1+exp(((a+b)*e))))/((-1+exp((a*e)))*(-1+exp((b*e)))))"
+                        ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "input_variables": [
+        "a",
+        "b",
+        "e"
+    ],
+    "return": "r",
+    "function_name": "irram_expq3"
+}

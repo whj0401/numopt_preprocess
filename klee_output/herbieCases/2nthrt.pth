@@ -1,0 +1,34 @@
+{
+    "input_variables": [
+        "x",
+        "n"
+    ],
+    "paths": [
+        {
+            "break": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(pow((1+x), (1/n))-pow(x, (1/n)))"
+                        ]
+                    ]
+                }
+            ],
+            "constrain": "true",
+            "continue": "false"
+        }
+    ],
+    "return": "r",
+    "variables": {
+        "x": "decimal",
+        "r": "decimal",
+        "b": "decimal",
+        "a": "decimal",
+        "n": "decimal"
+    },
+    "program_name": "2nthrt",
+    "function_name": "irram_2nthrt"
+}

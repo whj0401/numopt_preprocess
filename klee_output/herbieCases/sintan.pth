@@ -1,0 +1,32 @@
+{
+    "variables": {
+        "r": "decimal",
+        "a": "decimal",
+        "b": "decimal",
+        "x": "decimal"
+    },
+    "return": "r",
+    "paths": [
+        {
+            "constrain": "true",
+            "break": "false",
+            "continue": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "((x-sin(x))/(x-tan(x)))"
+                        ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "function_name": "irram_sintan",
+    "input_variables": [
+        "x"
+    ],
+    "program_name": "sintan"
+}

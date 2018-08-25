@@ -1,0 +1,30 @@
+{
+    "input_variables": [
+        "x"
+    ],
+    "paths": [
+        {
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "((1/sqrt(x))-(1/sqrt((1+x))))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "continue": "false",
+            "constrain": "true",
+            "break": "false"
+        }
+    ],
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "return": "r",
+    "function_name": "irram_2isqrt",
+    "program_name": "2isqrt"
+}

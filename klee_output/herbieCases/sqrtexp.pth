@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "function_name": "irram_sqrtexp",
+    "program_name": "sqrtexp",
+    "paths": [
+        {
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "sqrt(((-1+exp((2*x)))/(-1+exp(x))))"
+                        ]
+                    ]
+                }
+            ],
+            "continue": "false",
+            "constrain": "true",
+            "break": "false"
+        }
+    ],
+    "input_variables": [
+        "x"
+    ]
+}

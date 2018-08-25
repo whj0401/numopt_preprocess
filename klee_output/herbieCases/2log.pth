@@ -1,0 +1,30 @@
+{
+    "variables": {
+        "r": "decimal",
+        "N": "decimal"
+    },
+    "return": "r",
+    "function_name": "irram_2log",
+    "input_variables": [
+        "N"
+    ],
+    "paths": [
+        {
+            "continue": "false",
+            "constrain": "true",
+            "break": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(log((1+N))-log(N))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ]
+        }
+    ],
+    "program_name": "2log"
+}

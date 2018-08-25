@@ -1,0 +1,138 @@
+{
+    "program_name": "jmmuller",
+    "input_variables": [
+        "count"
+    ],
+    "variables": {
+        "b": "decimal",
+        "a": "decimal",
+        "c": "decimal",
+        "count": "integer"
+    },
+    "function_name": "evaluate",
+    "paths": [
+        {
+            "constrain": "true",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "a",
+                            "5"
+                        ],
+                        [
+                            "b",
+                            "6"
+                        ],
+                        [
+                            "c",
+                            "0"
+                        ]
+                    ],
+                    "type": "procedure"
+                },
+                {
+                    "content": {
+                        "initialize": {
+                            "i": "0"
+                        },
+                        "loop_body": [
+                            {
+                                "constrain": "!(i<count)",
+                                "path": [],
+                                "break": "true",
+                                "continue": "false"
+                            },
+                            {
+                                "constrain": "(i<count)",
+                                "path": [
+                                    {
+                                        "content": [
+                                            [
+                                                "a",
+                                                "b"
+                                            ],
+                                            [
+                                                "b",
+                                                "(111-((1130-(3000/a))/b))"
+                                            ],
+                                            [
+                                                "c",
+                                                "(111-((1130-(3000/a))/b))"
+                                            ],
+                                            [
+                                                "i",
+                                                "(1+i)"
+                                            ]
+                                        ],
+                                        "type": "procedure"
+                                    }
+                                ],
+                                "break": "false",
+                                "continue": "false"
+                            }
+                        ],
+                        "variables": {
+                            "i": "integer"
+                        }
+                    },
+                    "type": "loop"
+                },
+                {
+                    "content": [],
+                    "type": "procedure"
+                },
+                {
+                    "content": {
+                        "initialize": {
+                            "i": "0"
+                        },
+                        "loop_body": [
+                            {
+                                "constrain": "!(i<count)",
+                                "path": [],
+                                "break": "true",
+                                "continue": "false"
+                            },
+                            {
+                                "constrain": "(i<count)",
+                                "path": [
+                                    {
+                                        "content": [
+                                            [
+                                                "a",
+                                                "(3000/(1130-((111-b)*a)))"
+                                            ],
+                                            [
+                                                "b",
+                                                "a"
+                                            ],
+                                            [
+                                                "c",
+                                                "(3000/(1130-((111-b)*a)))"
+                                            ],
+                                            [
+                                                "i",
+                                                "(1+i)"
+                                            ]
+                                        ],
+                                        "type": "procedure"
+                                    }
+                                ],
+                                "break": "false",
+                                "continue": "false"
+                            }
+                        ],
+                        "variables": {
+                            "i": "integer"
+                        }
+                    },
+                    "type": "loop"
+                }
+            ],
+            "break": "false",
+            "continue": "false"
+        }
+    ],
+    "return": "c"
+}

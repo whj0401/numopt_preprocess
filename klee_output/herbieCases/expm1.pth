@@ -1,0 +1,30 @@
+{
+    "program_name": "expm1",
+    "variables": {
+        "x": "decimal",
+        "r": "decimal"
+    },
+    "input_variables": [
+        "x"
+    ],
+    "paths": [
+        {
+            "continue": "false",
+            "constrain": "true",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "(-1+exp(x))"
+                        ]
+                    ]
+                }
+            ],
+            "break": "false"
+        }
+    ],
+    "return": "r",
+    "function_name": "irram_expm1"
+}

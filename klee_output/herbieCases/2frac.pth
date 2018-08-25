@@ -1,0 +1,30 @@
+{
+    "return": "r",
+    "program_name": "2frac",
+    "paths": [
+        {
+            "continue": "false",
+            "constrain": "true",
+            "break": "false",
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "r",
+                            "((1/(1+x))-(1/x))"
+                        ]
+                    ]
+                }
+            ]
+        }
+    ],
+    "input_variables": [
+        "x"
+    ],
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "function_name": "irram_2frac"
+}

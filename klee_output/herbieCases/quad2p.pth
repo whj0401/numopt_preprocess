@@ -1,0 +1,34 @@
+{
+    "program_name": "quad2p",
+    "input_variables": [
+        "a",
+        "b",
+        "c"
+    ],
+    "function_name": "irram_quad2p",
+    "paths": [
+        {
+            "break": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "((((0-b)/2)+sqrt((((b*b)/4)-(a*c))))/a)"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "continue": "false",
+            "constrain": "true"
+        }
+    ],
+    "return": "r",
+    "variables": {
+        "b": "decimal",
+        "r": "decimal",
+        "a": "decimal",
+        "c": "decimal"
+    }
+}

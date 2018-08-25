@@ -1,0 +1,66 @@
+{
+    "return": "initval",
+    "paths": [
+        {
+            "path": [
+                {
+                    "type": "procedure",
+                    "content": [
+                        [
+                            "i",
+                            "1"
+                        ],
+                        [
+                            "initval",
+                            "0"
+                        ]
+                    ]
+                },
+                {
+                    "type": "loop",
+                    "content": {
+                        "variables": {},
+                        "initialize": {},
+                        "loop_body": [
+                            {
+                                "path": [
+                                    {
+                                        "type": "procedure",
+                                        "content": [
+                                            [
+                                                "initval",
+                                                "(initval+(1/(i*i)))"
+                                            ]
+                                        ]
+                                    }
+                                ],
+                                "continue": "false",
+                                "constrain": "(i<n)",
+                                "break": "false"
+                            },
+                            {
+                                "path": [],
+                                "continue": "false",
+                                "constrain": "!(i<n)",
+                                "break": "true"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "continue": "false",
+            "constrain": "true",
+            "break": "false"
+        }
+    ],
+    "function_name": "evaluate",
+    "program_name": "harmonic",
+    "input_variables": [
+        "n"
+    ],
+    "variables": {
+        "initval": "decimal",
+        "n": "integer",
+        "i": "integer"
+    }
+}

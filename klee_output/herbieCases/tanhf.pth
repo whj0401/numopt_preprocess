@@ -1,0 +1,30 @@
+{
+    "program_name": "tanhf",
+    "paths": [
+        {
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "((1-cos(x))/sin(x))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "break": "false",
+            "constrain": "true",
+            "continue": "false"
+        }
+    ],
+    "return": "r",
+    "variables": {
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "function_name": "irram_tanhf",
+    "input_variables": [
+        "x"
+    ]
+}

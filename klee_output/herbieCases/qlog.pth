@@ -1,0 +1,32 @@
+{
+    "function_name": "irram_qlog",
+    "paths": [
+        {
+            "constrain": "true",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "__return__",
+                            "(log((1-x))/log((1+x)))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "continue": "false",
+            "break": "false"
+        }
+    ],
+    "variables": {
+        "x": "decimal",
+        "a": "decimal",
+        "__return__": "decimal",
+        "b": "decimal"
+    },
+    "program_name": "qlog",
+    "input_variables": [
+        "x"
+    ],
+    "return": "__return__"
+}

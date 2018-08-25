@@ -1,0 +1,32 @@
+{
+    "return": "r",
+    "paths": [
+        {
+            "constrain": "true",
+            "break": "false",
+            "path": [
+                {
+                    "content": [
+                        [
+                            "r",
+                            "(sin((x+e))-sin(x))"
+                        ]
+                    ],
+                    "type": "procedure"
+                }
+            ],
+            "continue": "false"
+        }
+    ],
+    "program_name": "2sin",
+    "input_variables": [
+        "x",
+        "e"
+    ],
+    "variables": {
+        "e": "decimal",
+        "r": "decimal",
+        "x": "decimal"
+    },
+    "function_name": "irram_2sin"
+}
