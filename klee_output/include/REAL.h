@@ -334,7 +334,7 @@ namespace iRRAM
     
     inline REAL operator-(const REAL &x)
     {
-        return REAL(-x);
+        return REAL(-x.value);
     };
     
     
@@ -488,6 +488,8 @@ namespace iRRAM
     
     int sqrt(int);
     
+    int power(int, int);
+    
     int exp(int);
     
     int log(int);
@@ -545,6 +547,14 @@ namespace iRRAM
     
     int gamma(int);
     
+    int fac(int);
+    
+    int gammb(int);
+    
+    int gamm(int);
+    
+    int gammac(int);
+    
     REAL real_pi()
     {
         return REAL(pi());
@@ -573,6 +583,11 @@ namespace iRRAM
     REAL sqrt(const REAL &a)
     {
         return REAL(sqrt(a.value));
+    }
+    
+    REAL power(const REAL &a, const REAL &b)
+    {
+        return REAL(power(a.value, b.value));
     }
     
     REAL exp(const REAL &a)
@@ -713,6 +728,11 @@ namespace iRRAM
     REAL gamma(const REAL &x)
     {
         return REAL(gamma(x.value));
+    }
+    
+    REAL fac(const REAL &n)
+    {
+        return REAL(fac(n.value));
     }
 } // namespace iRRAM
 

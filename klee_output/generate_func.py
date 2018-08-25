@@ -95,10 +95,54 @@ def handle_function_json(func):
     return func
 
 
+def get_program_name(func):
+    src_file_name = func['program_name'].split('/')[-1]
+    postfix_offset = 0
+    if src_file_name.endswith('.cpp'):
+        postfix_offset = 4
+    elif src_file_name.endswith('.cc'):
+        postfix_offset = 3
+    elif src_file_name.endswith('.c') or src_file_name.endswith('.h'):
+        postfix_offset = 2
+    return src_file_name[:-postfix_offset]
+
+
+def simplify_return_procedure(func):
+    if len(func['paths']) == 1:
+        p = func['paths'][0]['path']
+        if len(p) > 0 and p[-1]['type'] == 'procedure':
+            content = p[-1]['content']
+            return_expr = []
+            if func['return'] == '__return__':
+                for expr in content:
+                    if expr[0] == func['return']:
+                        return_expr = expr
+                        break
+                if return_expr[1] in func['variables'].keys():
+                    # delete the last procedure, return expr[1] directly
+                    func['return'] = return_expr[1]
+                    func['paths'][0]['path'].pop()
+                else:
+                    for expr in content:
+                        if expr[0] == return_expr[0]:
+                            continue
+                        if expr[1] == return_expr[1]:
+                            return_expr = expr
+                            break
+                    # delete none return procedure
+                    func['return'] = return_expr[0]
+                    func['paths'][0]['path'][-1]['content'] = [return_expr]
+                if func['return'] != '__return__':
+                    func['variables'].pop('__return__')
+
+
 if __name__ == "__main__":
     file_name = sys.argv[1]
     func_json = read_json(file_name)
+    program_name = get_program_name(func_json)
     new_func = handle_function_json(func_json)
+    simplify_return_procedure(new_func)
+    new_func['program_name'] = program_name
     output_file = open(file_name + postfix_output, 'w')
     json.dump(new_func, output_file, indent=4)
     output_file.close()
@@ -110,5 +154,5 @@ if __name__ == "__main__":
     # change 'initializer' to 'initialize'
     content = content.replace('\"initializer\":', '\"initialize\":')
     output_file.close()
-    output_file = open(file_name + postfix_output, 'w')
+    output_file = open(program_name + postfix_output, 'w')
     output_file.write(content)
