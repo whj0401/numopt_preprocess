@@ -1,3 +1,4 @@
 *.ti
-.idea/*
+.idea/
 cmake-build-debug/
+run_cases_batch.sh
