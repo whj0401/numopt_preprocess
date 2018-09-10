@@ -29,10 +29,27 @@ def handle_loop_json(loop, loop_name):
     return loop
 
 
+def remove_out_layer_whole_expr_brace(expr):
+    if expr[0] == '(' and expr[-1] == ')':
+        brace_layer = 0
+        for i in range(len(expr)):
+            if expr[i] == '(':
+                brace_layer += 1
+            elif expr[i] == ')':
+                brace_layer -= 1
+            if brace_layer == 0:
+                if i == len(expr) - 1:
+                    return expr[1:len(expr) - 1]
+                else:
+                    return expr
+    return expr
+
+
 def handle_path_json(path):
     if path['constraint'] == '':
         path['constraint'] = 'true'
     path['constraint'] = path['constraint'].replace(' ', '')  # remove all space
+    path['constraint'] = remove_out_layer_whole_expr_brace(path['constraint'])
     content = path['path'][0]["content"]
     new_content = []
     loop = {}
@@ -53,6 +70,7 @@ def handle_path_json(path):
         elif procedure[0] == '__continue__':
             do_continue = True
         else:
+            procedure[1] = remove_out_layer_whole_expr_brace(procedure[1])
             new_content.append(procedure)
     path['path'][0]['content'] = new_content
     if len(loop) > 0:
@@ -153,6 +171,10 @@ if __name__ == "__main__":
     content = content.replace('\"constraint\":', '\"constrain\":')
     # change 'initializer' to 'initialize'
     content = content.replace('\"initializer\":', '\"initialize\":')
+    # some loop optimizations are based on string comparing. there are some bugs.
+    # fix these bugs with some simple string modification
+    content = content.replace('\"-1+i\"', '\"i-1\"')
+    content = content.replace('\"1+i\"', '\"i+1\"')
     output_file.close()
     output_file = open(program_name + postfix_output, 'w')
     output_file.write(content)

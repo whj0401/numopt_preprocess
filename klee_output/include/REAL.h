@@ -549,12 +549,6 @@ namespace iRRAM
     
     int fac(int);
     
-    int gammb(int);
-    
-    int gamm(int);
-    
-    int gammac(int);
-    
     REAL real_pi()
     {
         return REAL(pi());
