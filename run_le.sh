@@ -4,7 +4,7 @@ iRRAM_HOME=/home/whj/iRRAM
 
 src_file=$1
 
-cmake-build-debug/my_le $src_file -rose:Cxx -I$iRRAM_HOME/include -Itests/include
+./my_le $src_file -rose:Cxx -I$iRRAM_HOME/include -Itests/include
 cd klee_output
 ./make_expr.sh
 ./clean.sh
